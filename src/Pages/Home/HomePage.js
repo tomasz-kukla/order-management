@@ -26,25 +26,24 @@ export const HomePage = (props) => {
             .catch(console.log)
     }, []);
 
-    if (orders.length)
-        console.log("Orders: " + JSON.stringify(orders[0].orderPositionDTOList, null, 2));
+    // if (orders.length)
+    //     console.log("Orders: " + JSON.stringify(orders[0].orderPositionDTOList, null, 2));
 
 
 
 
 
     const filteredReady = orders.filter(x => x.status === "Przyjęto do realizacji");
-    console.log("Ready: " + JSON.stringify(filteredReady, null, 2));
+    // console.log("Ready: " + JSON.stringify(filteredReady, null, 2));
     const filteredInProgress = orders.filter(x => x.status === "W trakcie realizacji");
-    console.log("Progress: " + JSON.stringify(filteredInProgress, null, 2));
+    // console.log("Progress: " + JSON.stringify(filteredInProgress, null, 2));
     const filteredDone = orders.filter(x => x.status === "Do odbioru");
 
 
-    const handleForward = ({ id }) => {
+    const handleForward = (id, event) => {
         console.log({ id });
-        const ID = "c95a399b-f019-4e08-b71f-fb8e71a98239";
 
-        axios.put("http://127.0.0.1:8083/order/forward/" + ID + "/")
+        axios.put("http://127.0.0.1:8083/order/forward/" + id + "/")
             .then(res => {
                 console.log(res.data)
             })
@@ -52,20 +51,17 @@ export const HomePage = (props) => {
 
     }
 
-    // const handleBackward = () => {
-    //     console.log(data)
+    const handleBackward = (id, event) => {
+        console.log({ id });
 
-    //     axios.post("http://127.0.0.1:8083//", {
-    //         name: data.name,
-    //         category: data.category,
-    //         origin: data.origin,
-    //         established: data.established,
-    //     })
-    //         .then(res => {
-    //             console.log(res.data)
-    //         })
-    //         .catch(console.log)
-    // }
+        axios.put("http://127.0.0.1:8083/order/backward/" + id + "/")
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(console.log)
+
+    }
+
 
 
 
@@ -75,39 +71,44 @@ export const HomePage = (props) => {
                 <div className="col justify-content-center">
                     <H1>Przyjęto do realizacji</H1>
 
-                    {filteredReady.map((ready, index) => (
-                        <Div className="card text-center border-danger mb-3" styles={`width: 20rem`}>
-                            <div className="card-header">
-                                <h5 className="card-title" key={ready.id}>
-                                    {ready.status}</h5>
-                            </div>
-                            <div className="card-body" key={ready.id}>
-                                <t className="card-text" >
-                                    <b>Numer stolika: </b>{ready.tableNo}</t>
-                                <br />
-                                <hr />
-                                <h5 className="card-text" key={ready.id}>
-                                    {ready.orderPositionDTOList.map((dishes, index) => (
-                                        <div key={dishes.id}>
-                                            <h5>Do przygotowania: {dishes.dishDTO.name} x {dishes.quantity}</h5>
+                    {filteredReady.map((ready, index) => {
+                        console.log("ID: " + ready.id);
+                        return (
+                            <Div className="card text-center border-danger mb-3" styles={`width: 20rem`}>
+                                <div className="card-header">
+                                    <h5 className="card-title" key={ready.id}>
+                                        {ready.status}</h5>
+                                </div>
+                                <div className="card-body" key={ready.id}>
+                                    <t className="card-text" >
+                                        <b>Numer stolika: </b>{ready.tableNo}</t>
+                                    <br />
+                                    <hr />
+                                    <h5 className="card-text" key={ready.id}>
+                                        {ready.orderPositionDTOList.map((dishes, index) => (
+                                            <div key={dishes.id}>
+                                                <h5>Do przygotowania: {dishes.dishDTO.name} x {dishes.quantity}</h5>
 
-                                        </div>
-                                    ))}
-                                </h5>
-                            </div>
+                                            </div>
+                                        ))}
+                                    </h5>
+                                </div>
 
-                            <div className="card-footer">
+                                <div className="card-footer">
 
-                                <a
-                                    onClick={handleForward}
-                                    class="btn btn-success"
-                                >
-                                    Zaktualizuj status
-                                </a>
-                            </div>
-                        </Div>
 
-                    ))
+                                    <a
+                                        onClick={(event) => handleForward(ready.id, event)}
+                                        href="/"
+                                        class="btn btn-success"
+                                    >
+                                        Zaktualizuj status
+                                    </a>
+                                </div>
+                            </Div>
+
+                        )
+                    })
                     }
 
 
@@ -136,11 +137,11 @@ export const HomePage = (props) => {
                             </div>
 
                             <div className="card-footer">
-                                <a href={'/'} class="btn btn-danger">
+                                <a href={'/'} class="btn btn-danger" onClick={(event) => handleBackward(ready.id, event)}>
                                     Cofnij status
                                 </a>
                                 <br />
-                                <a href={'/'} class="btn btn-success" onClick={handleForward}>
+                                <a href={'/'} class="btn btn-success" onClick={(event) => handleForward(ready.id, event)}>
                                     Zaktualizuj status
                                 </a>
                             </div>
@@ -177,7 +178,7 @@ export const HomePage = (props) => {
                             </div>
 
                             <div className="card-footer">
-                                <a href={'/'} class="btn btn-danger">
+                                <a href={'/'} class="btn btn-danger" onClick={(event) => handleBackward(ready.id, event)}>
                                     Cofnij status
                                 </a>
                                 <br />
