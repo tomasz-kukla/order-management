@@ -11,6 +11,59 @@ import { Container, Col, Button } from 'react-bootstrap';
 
 export const HomePage = (props) => {
 
+    var cors = require('cors');
+
+    const [orders, setOrders] = useState([]);
+
+
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8083/orders/")
+            .then(res => console.log(res.data),
+            
+            )
+            .catch(console.log)
+    }, []);
+
+    const filteredReady = orders.filter(x => x.status === "Przyjęto do realizacji");
+    const filteredInProgress = orders.filter(x => x.status === "W trakcie realizacji");
+    const filteredDone = orders.filter(x => x.status === "Do odbioru");
+
+
+
+    // const handleForward = () => {
+    //     console.log(data)
+
+    //     axios.post("http://127.0.0.1:8083/, {
+    //         category: data.category,
+    //         origin: data.origin,
+    //         established: data.established,
+    //     })
+    //         .then(res => {
+    //             console.log(res.data)
+    //         })
+    // .catch(console.log)
+
+    // }
+
+    // const handleBackward = () => {
+    //     console.log(data)
+
+    //     axios.post("http://127.0.0.1:8083//", {
+    //         name: data.name,
+    //         category: data.category,
+    //         origin: data.origin,
+    //         established: data.established,
+    //     })
+    //         .then(res => {
+    //             console.log(res.data)
+    //         })
+    //         .catch(console.log)
+    // }
+
+
+
+
+
 
 
     return (
@@ -38,9 +91,9 @@ export const HomePage = (props) => {
                         <div className="card-footer">
                             <a
                                 href={'/'}
-                                class="btn btn-danger"
+                                class="btn btn-success"
                             >
-                                Edit
+                                Zaktualizuj status
                             </a>
                         </div>
                     </Div>
@@ -66,11 +119,12 @@ export const HomePage = (props) => {
                         </div>
 
                         <div className="card-footer">
-                            <a
-                                href={'/'}
-                                class="btn btn-danger"
-                            >
-                                Edit
+                            <a href={'/'} class="btn btn-danger">
+                                Cofnij status
+                            </a>
+                            <a>     </a>
+                            <a href={'/'} class="btn btn-success">
+                                Zaktualizuj status
                             </a>
                         </div>
                     </Div>
@@ -97,11 +151,12 @@ export const HomePage = (props) => {
                         </div>
 
                         <div className="card-footer">
-                            <a
-                                href={'/'}
-                                class="btn btn-danger"
-                            >
-                                Edit
+                            <a href={'/'} class="btn btn-danger">
+                                Cofnij status
+                            </a>
+                            <a>     </a>
+                            <a href={'/'} class="btn btn-success">
+                                Zaktualizuj status
                             </a>
                         </div>
                     </Div>
